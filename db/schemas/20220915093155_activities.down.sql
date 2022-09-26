@@ -1,0 +1,5 @@
+BEGIN;
+
+DROP SCHEMA IF EXISTS activities CASCADE;
+
+COMMIT;
