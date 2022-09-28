@@ -28,7 +28,7 @@ func BuildUserHandler(cfg config.Config, router *gin.Engine, db *gorm.DB, redisP
 	urr := userRepo.NewUserRoleRepository(db, cache)
 	pr := userRepo.NewPermissionRepository(db, cache)
 	nr := notificationRepo.NewNotificationRepository(db)
-	
+
 	// Cloud Storage
 	cloudStorage := gcs.NewGoogleCloudStorage(cfg)
 	// cloudStorage := aws.NewS3Bucket(cfg, awsSession)

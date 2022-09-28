@@ -4,6 +4,8 @@ import (
 	"gin-starter/common/interfaces"
 	"gin-starter/config"
 	"gin-starter/middleware"
+	activitieshandlerv1 "gin-starter/modules/activities/v1/handler"
+	activitiesservicev1 "gin-starter/modules/activities/v1/service"
 	authhandlerv1 "gin-starter/modules/auth/v1/handler"
 	authservicev1 "gin-starter/modules/auth/v1/service"
 	masterhandlerv1 "gin-starter/modules/master/v1/handler"
@@ -173,5 +175,51 @@ func UserDeleterHTTPHandler(cfg config.Config, router *gin.Engine, ud userservic
 	{
 		v1.DELETE("/cms/admin/:id", hnd.DeleteAdmin)
 		v1.DELETE("/cms/role/:id", hnd.DeleteRole)
+	}
+}
+
+// ActivitiesFinderHTTPHandler is a handler for activities APIs
+func ActivitiesFinderHTTPHandler(cfg config.Config, router *gin.Engine, af activitiesservicev1.ActivitiesFinderUseCase) {
+	hnd := activitieshandlerv1.NewActivitiesFinderHandler(af)
+	v1 := router.Group("/v1")
+	{
+		v1.GET("/activities", hnd.GetActivities)
+		v1.GET("/activities/:id", hnd.GetActivityByID)
+	}
+}
+
+// ActivitiesCreatorHTTPHandler is a handler for activities APIs
+func ActivitiesCreatorHTTPHandler(cfg config.Config, router *gin.Engine, ac activitiesservicev1.ActivitiesCreatorUseCase) {
+	hnd := activitieshandlerv1.NewActivitiesCreatorHandler(ac)
+	v1 := router.Group("/v1")
+
+	v1.Use(middleware.Auth(cfg))
+	v1.Use(middleware.Admin(cfg))
+	{
+		v1.POST("/activities", hnd.CreateActivities)
+	}
+}
+
+// ActivitiesUpdaterHTTPHandler is a handler for activities APIs
+func ActivitiesUpdaterHTTPHandler(cfg config.Config, router *gin.Engine, au activitiesservicev1.ActivitiesUpdaterUseCase) {
+	hnd := activitieshandlerv1.NewActivitiesUpdaterHandler(au)
+	v1 := router.Group("/v1")
+
+	v1.Use(middleware.Auth(cfg))
+	v1.Use(middleware.Admin(cfg))
+	{
+		v1.PUT("/activities/:id", hnd.UpdateActivities)
+	}
+}
+
+// ActivitiesDeleterHTTPHandler is a handler for activities APIs
+func ActivitiesDeleterHTTPHandler(cfg config.Config, router *gin.Engine, ad activitiesservicev1.ActivitiesDeleterUseCase) {
+	hnd := activitieshandlerv1.NewActivitiesDeleterHandler(ad)
+	v1 := router.Group("/v1")
+
+	v1.Use(middleware.Auth(cfg))
+	v1.Use(middleware.Admin(cfg))
+	{
+		v1.DELETE("/activities/:id", hnd.DeleteActivities)
 	}
 }
