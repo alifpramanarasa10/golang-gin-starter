@@ -31,6 +31,8 @@ type ActivitiesRepositoryUseCase interface {
 	GetActivities(ctx context.Context, query, sort, order string, limit, offset int) ([]*entity.Activities, int64, error)
 	// Delete is a function to delete admin Activities
 	Delete(ctx context.Context, id uuid.UUID) error
+	// GetActivitiesByID is a function to get Activities by id
+	GetActivitiesByUserID(ctx context.Context, id uuid.UUID) ([]*entity.Activities, error)
 }
 
 // NewActivitiesRepository creates a new ActivitiesRepository
@@ -142,4 +144,22 @@ func (ur *ActivitiesRepository) Delete(ctx context.Context, id uuid.UUID) error 
 	}
 
 	return nil
+}
+
+// GetActivitiesByID is a function to get Activities by user id
+func (ur *ActivitiesRepository) GetActivitiesByUserID(ctx context.Context, id uuid.UUID) ([]*entity.Activities, error) {
+	var result []*entity.Activities
+
+	if err := ur.db.
+		WithContext(ctx).
+		Where("user_id = ?", id).
+		Find(result).
+		Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, errors.Wrap(err, "[ActivitiesRepository-GetActivitiesByUserID] Activities not found")
+	}
+
+	return result, nil
 }

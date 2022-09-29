@@ -47,8 +47,16 @@ type GetActivitiesResponse struct {
 	Total int64         `json:"total"`
 }
 
+type GetActivitiesWithoutTotalResponse struct {
+	List []*Activities `json:"list"`
+}
+
 type GetActivitiesByIDRequest struct {
 	ID uuid.UUID `uri:"id" binding:"required"`
+}
+
+type GetActivitiesByUserIDRequest struct {
+	UserID uuid.UUID `uri:"id" binding:"required"`
 }
 
 func NewActivities(activities *entity.Activities) *Activities {

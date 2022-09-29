@@ -185,6 +185,7 @@ func ActivitiesFinderHTTPHandler(cfg config.Config, router *gin.Engine, af activ
 	{
 		v1.GET("/activities", hnd.GetActivities)
 		v1.GET("/activities/:id", hnd.GetActivityByID)
+		v1.GET("/activities/:id/user", hnd.GetActivityByUserID)
 	}
 }
 

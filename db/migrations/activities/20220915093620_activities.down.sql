@@ -1,5 +1,5 @@
 BEGIN;
 
-DROP TABLE IF EXISTS main.activities;
+DROP TABLE IF EXISTS activities.activities;
 
 COMMIT;

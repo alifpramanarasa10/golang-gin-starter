@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gin-starter/app"
 	"gin-starter/config"
+	activitiesBuilder "gin-starter/modules/activities/v1/builder"
 	authBuilder "gin-starter/modules/auth/v1/builder"
 	masterBuilder "gin-starter/modules/master/v1/builder"
 	notificationBuilder "gin-starter/modules/notification/v1/builder"
@@ -122,6 +123,7 @@ func BuildHandler(cfg config.Config, router *gin.Engine, db *gorm.DB, redisPool 
 	userBuilder.BuildUserHandler(cfg, router, db, redisPool, awsSession)
 	notificationBuilder.BuildNotificationHandler(cfg, router, db, redisPool, awsSession)
 	masterBuilder.BuildMasterHandler(cfg, router, db, redisPool, awsSession)
+	activitiesBuilder.BuildActivitiesHandler(cfg, router, db, redisPool, awsSession)
 }
 
 func checkError(err error) {

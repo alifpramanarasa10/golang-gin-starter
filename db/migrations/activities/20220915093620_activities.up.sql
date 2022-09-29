@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS main.activities
+CREATE TABLE IF NOT EXISTS activities.activities
 (
     id          UUID         NOT NULL,
     user_id     UUID         NOT NULL,

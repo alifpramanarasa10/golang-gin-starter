@@ -75,3 +75,33 @@ func (a *ActivitiesFinderHandler) GetActivityByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response.SuccessAPIResponseList(http.StatusOK, "success", resource.NewActivities(activity)))
 }
+
+// GetActivityByUserID is a handler for getting activity by user ID
+func (a *ActivitiesFinderHandler) GetActivityByUserID(c *gin.Context) {
+	var request resource.GetActivitiesByUserIDRequest
+
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, response.ErrorAPIResponse(http.StatusBadRequest, err.Error()))
+		c.Abort()
+		return
+	}
+
+	activities, err := a.activitiesFinder.GetActivitiesByUserID(c, request.UserID)
+
+	if err != nil {
+		parseError := errors.ParseError(err)
+		c.JSON(parseError.Code, response.ErrorAPIResponse(parseError.Code, parseError.Message))
+		c.Abort()
+		return
+	}
+
+	res := make([]*resource.Activities, 0)
+
+	for _, activity := range activities {
+		res = append(res, resource.NewActivities(activity))
+	}
+
+	c.JSON(http.StatusOK, response.SuccessAPIResponseList(http.StatusOK, "success", &resource.GetActivitiesWithoutTotalResponse{
+		List: res,
+	}))
+}

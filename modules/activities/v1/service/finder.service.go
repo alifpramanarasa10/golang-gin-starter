@@ -22,6 +22,8 @@ type ActivitiesFinderUseCase interface {
 	GetActivities(ctx context.Context, query, order, sort string, limit, offset int) ([]*entity.Activities, int64, error)
 	// GetActivitiesByID gets a activities by ID
 	GetActivitiesByID(ctx context.Context, id uuid.UUID) (*entity.Activities, error)
+	// GetActivitiesByUserID gets a activities by user ID
+	GetActivitiesByUserID(ctx context.Context, userID uuid.UUID) ([]*entity.Activities, error)
 }
 
 // NewActivitiesFinder is a constructor for the Activities finder
@@ -48,6 +50,16 @@ func (a *ActivitiesFinder) GetActivities(ctx context.Context, query, order, sort
 // GetActivitiesByID gets a activities by ID
 func (a *ActivitiesFinder) GetActivitiesByID(ctx context.Context, id uuid.UUID) (*entity.Activities, error) {
 	activities, err := a.activitiesRepo.GetActivitiesByID(ctx, id)
+	if err != nil {
+		return nil, errors.ErrInternalServerError.Error()
+	}
+
+	return activities, nil
+}
+
+// GetActivitiesByUserID gets a activities by user ID
+func (a *ActivitiesFinder) GetActivitiesByUserID(ctx context.Context, userID uuid.UUID) ([]*entity.Activities, error) {
+	activities, err := a.activitiesRepo.GetActivitiesByUserID(ctx, userID)
 	if err != nil {
 		return nil, errors.ErrInternalServerError.Error()
 	}
